@@ -1,0 +1,66 @@
+[package]
+name = "ws_project"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "server"
+path = "src/bin/server.rs"
+
+[[bin]]
+name = "client"
+path = "src/bin/client.rs"
+
+[[bin]]
+name = "native_client"
+path = "src/bin/native_client.rs"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# WASM-specific dependencies (for lib.rs)
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+web-sys = { version = "0.3", features = ["WebSocket", "MessageEvent", "Event"] }
+getrandom = { version = "0.2", features = ["js"] }
+
+# Server/native client dependencies
+[dependencies.tokio]
+version = "1"
+features = ["full"]
+optional = true
+
+[dependencies.tokio-tungstenite]
+version = "0.26.0"
+optional = true
+
+[dependencies.futures-util]
+version = "0.3"
+optional = true
+
+[dependencies.futures]
+version = "0.3"
+optional = true
+
+[dependencies.url]
+version = "2.5"
+optional = true
+
+# Native client dependencies
+[dependencies.bevy]
+version = "0.15.3"
+features = ["default"]
+optional = true
+
+[dependencies.bevy_egui]
+version = "0.33.0"
+optional = true
+
+[features]
+default = []
+server = ["tokio", "tokio-tungstenite", "futures-util", "futures", "url"]
+native = ["tokio", "tokio-tungstenite", "futures-util", "futures", "bevy", "bevy_egui"]
+
+[profile.release]
+opt-level = 3
